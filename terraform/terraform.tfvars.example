@@ -1,0 +1,12 @@
+# ============================================================================
+# Example variable values — copy to terraform.tfvars and adjust.
+# terraform.tfvars is git-ignored; this example file is safe to commit.
+# ============================================================================
+
+resource_group_name   = "rg-ideahub-dev"
+location              = "eastus"
+cosmosdb_account_name = "cosmos-ideahub-dev" # must be globally unique
+cosmosdb_database_name    = "ideahub"
+cosmosdb_container_name   = "ideas"
+environment           = "dev"
+owner                 = "platform-team"
