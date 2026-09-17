@@ -1,0 +1,29 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+!terraform.tfvars.example
+crash.log
+crash.*.log
+# Note: .terraform.lock.hcl is intentionally NOT ignored - commit it for
+# reproducible provider versions across machines/CI.
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Misc
+.DS_Store
+
+# env
+.env
+
+# --- AI Agents & Model Context Protocol (MCP) ---
+.agents/
+
+# claude generated files
+scripts
+docs
