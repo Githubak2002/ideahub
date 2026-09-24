@@ -1,4 +1,4 @@
-# IdeaHub — AKS → Cosmos DB via Workload Identity + UAMI
+# IdeaHub - App on AKS connecting to → Cosmos DB via Workload Identity + OIDC Federation + UAMI
 
 A minimal, working reference for the pattern Azure recommends for production:
 **pods authenticate to Cosmos DB as a User-Assigned Managed Identity (UAMI)

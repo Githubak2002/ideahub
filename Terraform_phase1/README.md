@@ -98,7 +98,7 @@ terraform destroy
 | `cosmosdb_account_name` | `string` | — | Globally-unique Cosmos DB account name |
 | `cosmosdb_database_name` | `string` | `ideahub` | Cosmos DB SQL database name |
 | `cosmosdb_container_name` | `string` | `ideas` | Cosmos DB SQL container name |
-| `cosmosdb_container_partition_key` | `string` | `/idea_id` | Container partition key path |
+| `cosmosdb_container_partition_key` | `string` | `/id` | Container partition key path |
 | `environment` | `string` | `dev` | Deployment environment label |
 | `owner` | `string` | `platform-team` | Resource owner tag |
 
