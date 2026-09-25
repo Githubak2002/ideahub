@@ -1,0 +1,34 @@
+# ============================================================================
+# Example variable values - copy to terraform.tfvars and adjust.
+# terraform.tfvars is git-ignored; this example file is safe to commit.
+# ============================================================================
+
+project     = "ideahub"
+environment = "dev"
+owner       = "platform-team"
+location    = "centralindia"
+
+# Networking
+vnet_address_space = ["10.0.0.0/16"]
+aks_subnet_prefix  = "10.0.1.0/24"
+vm_subnet_prefix   = "10.0.2.0/24"
+ssh_source_cidr    = "YOUR_PUBLIC_IP/32" # Replace with your IP
+
+# AKS
+aks_node_vm_size   = "Standard_B2s"
+aks_node_count     = 1
+kubernetes_version = null # null = latest stable
+
+# Cosmos DB
+cosmosdb_database_name  = "ideahub"
+cosmosdb_container_name = "ideas"
+cosmosdb_partition_key  = "/id"
+
+# Jump VM
+vm_size           = "Standard_B1s"
+vm_admin_username = "azureuser"
+vm_ssh_public_key = "ssh-rsa AAAA..." # Paste your public key
+
+# Workload Identity
+workload_namespace       = "ideahub"
+workload_service_account = "ideahub-sa"

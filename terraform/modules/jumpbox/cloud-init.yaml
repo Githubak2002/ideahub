@@ -1,0 +1,24 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - curl
+  - jq
+  - apt-transport-https
+  - ca-certificates
+  - gnupg
+  - lsb-release
+
+runcmd:
+  # Install Azure CLI
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+  # Install kubectl
+  - curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+  - apt-get update
+  - apt-get install -y kubectl
+
+  # Install kubelogin (for AKS AAD/Entra auth)
+  - az aks install-cli 2>/dev/null || true
