@@ -1,0 +1,17 @@
+# ClusterIP on purpose: this is a security demo, not a public app. Reach it
+# with `kubectl port-forward` (see scripts/verify.sh) rather than expanding
+# the attack surface with a public LoadBalancer for a POC.
+apiVersion: v1
+kind: Service
+metadata:
+  name: ideahub
+  namespace: ideahub
+spec:
+  type: ClusterIP
+  selector:
+    app: ideahub
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8000
+      targetPort: 8000

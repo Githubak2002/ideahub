@@ -1,0 +1,14 @@
+# Deliberately a ConfigMap, not a Secret: a Cosmos DB endpoint URL and
+# database/container names carry no authority on their own once
+# local_authentication_disabled = true is set on the account (terraform/
+# cosmosdb.tf) - only an Azure AD token can actually do anything with them.
+# That's what lets this live in plain text, in git, in kubectl describe output.
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: ideahub-config
+#   namespace: ideahub
+# data:
+#   COSMOS_ENDPOINT: "${COSMOS_ENDPOINT}"
+#   COSMOS_DATABASE: "${COSMOS_DATABASE}"
+#   COSMOS_CONTAINER: "${COSMOS_CONTAINER}"

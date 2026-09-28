@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ideahub
+  namespace: ideahub
+  labels:
+    app: ideahub
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: ideahub
+
+  template:
+    metadata:
+      labels:
+        app: ideahub
+
+        # Azure Workload Identity webhook will mutate this Pod.
+        azure.workload.identity/use: "true"
+
+    spec:
+      serviceAccountName: ideahub-sa
+
+      automountServiceAccountToken: true
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: ideahub-api
+
+          image: "akdevanurag/ideahub-phase2:v1"
+          imagePullPolicy: Always
+
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+
+          env:
+            # IMPORTANT:
+            # This tells the application to use DefaultAzureCredential.
+            - name: COSMOS_AUTH_MODE
+              value: "uami"
+
+            - name: COSMOS_ENDPOINT
+              value: "https://ideahub-dev-cosmos.documents.azure.com:443/"
+
+            - name: COSMOS_DATABASE
+              value: "ideahub"
+
+            - name: COSMOS_CONTAINER
+              value: "ideas"
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+
+            limits:
+              cpu: 500m
+              memory: 256Mi
+
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3

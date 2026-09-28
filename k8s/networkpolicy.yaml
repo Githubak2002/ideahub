@@ -1,0 +1,59 @@
+# Requires network_dataplane = "cilium" (set in terraform/aks.tf) - this CRD
+# doesn't exist on the default Azure/kube-proxy dataplane.
+#
+# Deny-by-default egress for the app pod, with narrow, named exceptions.
+# Even though the app already can't authenticate anywhere except Cosmos DB
+# (no keys to exfiltrate to a third party in the first place), this stops a
+# compromised/vulnerable dependency from reaching anything on the internet
+# other than the two Azure endpoints the app legitimately needs.
+# apiVersion: cilium.io/v2
+# kind: CiliumNetworkPolicy
+# metadata:
+#   name: ideahub-api-egress
+#   namespace: ideahub
+# spec:
+#   endpointSelector:
+#     matchLabels:
+#       app: ideahub-api
+
+#   egress:
+#     # DNS resolution (required before any FQDN rule below can match)
+#     - toEndpoints:
+#         - matchLabels:
+#             k8s:io.kubernetes.pod.namespace: kube-system
+#             k8s-app: kube-dns
+#       toPorts:
+#         - ports:
+#             - port: "53"
+#               protocol: UDP
+#             - port: "53"
+#               protocol: TCP
+
+#     # Azure AD - where the federated K8s token gets exchanged for a Cosmos
+#     # DB access token.
+#     - toFQDNs:
+#         - matchName: "login.microsoftonline.com"
+#       toPorts:
+#         - ports:
+#             - port: "443"
+#               protocol: TCP
+
+#     # Cosmos DB data plane (gateway + per-partition routing both live under
+#     # this domain).
+#     - toFQDNs:
+#         - matchPattern: "*.documents.azure.com"
+#       toPorts:
+#         - ports:
+#             - port: "443"
+#               protocol: TCP
+
+#   ingress:
+#     # Same-namespace only for now (nothing calls this app yet - it's
+#     # API-only per project scope). Widen this if/when a frontend is added.
+#     - fromEndpoints:
+#         - matchLabels:
+#             k8s:io.kubernetes.pod.namespace: ideahub
+#       toPorts:
+#         - ports:
+#             - port: "8000"
+#               protocol: TCP
