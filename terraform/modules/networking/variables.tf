@@ -33,10 +33,10 @@ variable "vm_subnet_prefix" {
   type        = string
 }
 
-variable "ssh_source_cidr" {
-  description = "Source CIDR allowed for SSH."
-  type        = string
-}
+# variable "ssh_source_cidr" {
+#   description = "Source CIDR allowed for SSH."
+#   type        = string
+# }
 
 variable "tags" {
   description = "Common tags."

@@ -40,9 +40,10 @@ resource "azurerm_cosmosdb_account" "this" {
   # Public access enabled during migration; will be restricted later
   public_network_access_enabled = true
 
-  # Key auth left enabled for safe migration from Phase 1.
-  # Set to true to disable key auth after Workload Identity verification.
-  local_authentication_disabled = false
+  # Key auth enabled for safe migration from Phase 1.
+  # After Workload Identity is verified working, set to false to enforce RBAC-only.
+  # AzureRM 5.x: use local_authentication_enabled (local_authentication_disabled removed)
+  local_authentication_enabled = true
 
   backup {
     type                = "Periodic"

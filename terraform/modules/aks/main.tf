@@ -45,5 +45,11 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin = "azure"
   }
 
+  # --- Node provisioning profile (required in AzureRM >= 5.7) ----------------
+  # Manual = standard node pools, no auto-provisioning (cost-optimised POC)
+  node_provisioning_profile {
+    mode = "Manual"
+  }
+
   tags = var.tags
 }

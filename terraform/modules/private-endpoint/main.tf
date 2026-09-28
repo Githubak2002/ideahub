@@ -17,12 +17,11 @@ resource "azurerm_private_dns_zone" "cosmos" {
 # -----------------------------------------------------------------------------
 
 resource "azurerm_private_dns_zone_virtual_network_link" "cosmos" {
-  name                  = "${var.project}-${var.environment}-cosmos-dns-link"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.cosmos.name
-  virtual_network_id    = var.vnet_id
-  registration_enabled  = false
-  tags                  = var.tags
+  name                 = "${var.project}-${var.environment}-cosmos-dns-link"
+  private_dns_zone_id  = azurerm_private_dns_zone.cosmos.id
+  virtual_network_id   = var.vnet_id
+  registration_enabled = false
+  tags                 = var.tags
 }
 
 # -----------------------------------------------------------------------------

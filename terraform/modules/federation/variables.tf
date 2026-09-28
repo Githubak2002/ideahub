@@ -8,13 +8,8 @@ variable "environment" {
   type        = string
 }
 
-variable "resource_group_name" {
-  description = "Name of the resource group."
-  type        = string
-}
-
 variable "workload_uami_id" {
-  description = "Resource ID of the workload UAMI (parent for FIC)."
+  description = "Resource ID of the workload UAMI (user_assigned_identity_id for FIC)."
   type        = string
 }
 

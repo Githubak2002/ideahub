@@ -30,7 +30,7 @@ variable "owner" {
 variable "location" {
   description = "Azure region for all resources."
   type        = string
-  default     = "eastus"
+  default     = "centralindia"
 }
 
 # --- Networking --------------------------------------------------------------
@@ -53,15 +53,15 @@ variable "vm_subnet_prefix" {
   default     = "10.0.2.0/24"
 }
 
-variable "ssh_source_cidr" {
-  description = "Source CIDR allowed to SSH into the Jump VM (e.g. your public IP/32)."
-  type        = string
+# variable "ssh_source_cidr" {
+#   description = "Source CIDR allowed to SSH into the Jump VM (e.g. your public IP/32)."
+#   type        = string
 
-  validation {
-    condition     = can(cidrhost(var.ssh_source_cidr, 0))
-    error_message = "ssh_source_cidr must be a valid CIDR block."
-  }
-}
+#   validation {
+#     condition     = can(cidrhost(var.ssh_source_cidr, 0))
+#     error_message = "ssh_source_cidr must be a valid CIDR block."
+#   }
+# }
 
 # --- AKS ---------------------------------------------------------------------
 
