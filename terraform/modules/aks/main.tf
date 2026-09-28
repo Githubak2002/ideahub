@@ -42,7 +42,11 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   # --- Network profile -------------------------------------------------------
   network_profile {
-    network_plugin = "azure"
+    network_plugin      = "azure"
+    network_plugin_mode = "overlay"
+    pod_cidr            = var.pod_cidr
+    service_cidr        = var.service_cidr
+    dns_service_ip      = var.dns_service_ip
   }
 
   # --- Node provisioning profile (required in AzureRM >= 5.7) ----------------

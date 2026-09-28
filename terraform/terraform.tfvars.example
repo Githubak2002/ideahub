@@ -18,6 +18,9 @@ ssh_source_cidr    = "YOUR_PUBLIC_IP/32" # Replace with your IP
 aks_node_vm_size   = "Standard_B2s"
 aks_node_count     = 1
 kubernetes_version = null # null = latest stable
+pod_cidr           = "10.10.0.0/16"
+service_cidr       = "10.20.0.0/16"
+dns_service_ip     = "10.20.0.10"
 
 # Cosmos DB
 cosmosdb_database_name  = "ideahub"

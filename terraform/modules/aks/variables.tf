@@ -51,3 +51,21 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "pod_cidr" {
+  description = "CIDR range used for AKS pod IPs with Azure CNI Overlay"
+  type        = string
+  default     = "10.10.0.0/16"
+}
+
+variable "service_cidr" {
+  description = "CIDR range used for Kubernetes Services"
+  type        = string
+  default     = "10.20.0.0/16"
+}
+
+variable "dns_service_ip" {
+  description = "Kubernetes DNS service IP"
+  type        = string
+  default     = "10.20.0.10"
+}

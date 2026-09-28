@@ -69,6 +69,9 @@ module "aks" {
   node_vm_size        = var.aks_node_vm_size
   node_count          = var.aks_node_count
   kubernetes_version  = var.kubernetes_version
+  pod_cidr            = var.pod_cidr
+  service_cidr        = var.service_cidr
+  dns_service_ip      = var.dns_service_ip  
   tags                = local.common_tags
 }
 

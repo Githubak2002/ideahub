@@ -88,6 +88,21 @@ variable "kubernetes_version" {
   default     = null
 }
 
+variable "pod_cidr" {
+  description = "CIDR range used for AKS pod IPs with Azure CNI Overlay"
+  type        = string
+}
+
+variable "service_cidr" {
+  description = "CIDR range used for Kubernetes Services"
+  type        = string
+}
+
+variable "dns_service_ip" {
+  description = "Kubernetes DNS service IP"
+  type        = string
+}
+
 # --- Cosmos DB ---------------------------------------------------------------
 
 variable "cosmosdb_database_name" {

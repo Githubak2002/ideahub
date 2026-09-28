@@ -43,7 +43,8 @@ resource "azurerm_cosmosdb_account" "this" {
   # Key auth enabled for safe migration from Phase 1.
   # After Workload Identity is verified working, set to false to enforce RBAC-only.
   # AzureRM 5.x: use local_authentication_enabled (local_authentication_disabled removed)
-  local_authentication_enabled = true
+  # local_authentication_enabled = true
+  local_authentication_enabled = false
 
   backup {
     type                = "Periodic"
