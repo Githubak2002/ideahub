@@ -43,21 +43,21 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
-
-          env:
+          envFrom:
+            - configMapRef:
+                name: ideahub-config
+          
+          # env:
             # IMPORTANT:
             # This tells the application to use DefaultAzureCredential.
-            - name: COSMOS_AUTH_MODE
-              value: "uami"
-
-            - name: COSMOS_ENDPOINT
-              value: "https://ideahub-dev-cosmos.documents.azure.com:443/"
-
-            - name: COSMOS_DATABASE
-              value: "ideahub"
-
-            - name: COSMOS_CONTAINER
-              value: "ideas"
+            # - name: COSMOS_AUTH_MODE
+            #   value: "uami"
+            # - name: COSMOS_ENDPOINT
+            #   value: "https://ideahub-dev-cosmos.documents.azure.com:443/"
+            # - name: COSMOS_DATABASE
+            #   value: "ideahub"
+            # - name: COSMOS_CONTAINER
+            #   value: "ideas"
 
           securityContext:
             allowPrivilegeEscalation: false

@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ideahub
+  namespace: ideahub
+  labels:
+    app: ideahub
+
+spec:
+  replicas: 2
+
+  # Which pod Deployment should manage
+  selector:
+    matchLabels:
+      app: ideahub
+
+  # This 'template' section : the blueprint k8s uses every time it creates a new Pod
+  template:
+    metadata:
+      labels:
+        # newly created Pod with the label so the selector above can find it
+        app: ideahub 
+        # This specific annotation tells the Azure Workload Identity Mutating Webhook 
+        # to inject Azure credentials (environment variables and volume mounts) into this pod.
+        azure.workload.identity/use: "true"
+
+    spec:
+      # Links the pod to a specific ServiceAccount rather than the default one.
+      serviceAccountName: ideahub-sa
+      # Required for Azure Workload identity to fetch the token for authentication.
+      automountServiceAccountToken: true
+
+      # Pod-level security context (Excellent for production)
+      securityContext:
+        # Prevents the container from running as the root user (blocks a major security risk).
+        runAsNonRoot: true
+        # Sets the specific user ID to run the process.
+        runAsUser: 10001
+        # Sets the specific group ID to run the process.
+        runAsGroup: 10001
+        # Applies the default secure computing mode profile to restrict Linux system calls.
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: ideahub-api
+          image: "akdevanurag/ideahub-phase2:v1"
+          # PROD WARNING: 'Always' forces a network call to the registry on every restart. 
+          # For production, tie your image to a specific SHA/version and use 'IfNotPresent'.
+          imagePullPolicy: Always
+
+          ports:
+            # Names the port 'http' so services can reference it by name instead of number.
+            - name: http
+              # The port your application code is actually listening on inside the container.
+              containerPort: 8000
+              protocol: TCP
+          
+          # Injects all key-value pairs from the 'ideahub-config' ConfigMap as environment variables.
+          envFrom:
+            - configMapRef:
+                name: ideahub-config
+
+          # Container-level security context
+          securityContext:
+            # Prevents child processes from gaining more privileges than the parent.
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                # Drops all root Linux capabilities (like changing network interfaces, etc.)
+                - ALL
+
+          # Resource management (Crucial for production stability)
+          resources:
+            requests:
+              # The guaranteed minimum resources reserved on a node for this pod. 
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              # The absolute maximum resources this pod can use before being throttled (CPU) or killed (OOMKilled for Memory).
+              cpu: 500m
+              memory: 256Mi
+
+          # READINESS PROBE: Determines if the pod is ready to accept user traffic.
+          readinessProbe:
+            httpGet:
+              path: /readyz  # The endpoint your app exposes to verify dependencies (like DB connections) are up.
+              port: 8000
+            initialDelaySeconds: 5  # Wait 5 seconds after container starts before checking for the first time.
+            periodSeconds: 10       # Perform this check every 10 seconds indefinitely.
+            timeoutSeconds: 5       # If the app takes longer than 5 seconds to reply, consider the check failed.
+            failureThreshold: 3     # If it fails 3 times in a row, remove this pod from the LoadBalancer/Service.
+
+          # LIVENESS PROBE: Determines if the pod is fundamentally alive or deadlocked.
+          livenessProbe:
+            httpGet:
+              path: /healthz # A lightweight endpoint that just returns 200 OK if the basic HTTP server is running.
+              port: 8000
+            initialDelaySeconds: 10 # Wait 10 seconds to let the app fully boot before the first check.
+            periodSeconds: 20       # Check every 20 seconds.
+            timeoutSeconds: 5       # Wait up to 5 seconds for a response.
+            failureThreshold: 3     # If it fails 3 times in a row, physically restart the container.

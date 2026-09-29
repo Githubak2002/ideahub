@@ -21,6 +21,8 @@ about the infra and security plumbing around it.
 
 ## Architecture
 
+**NOTE:** Please explore the doc/architecture-diagrams > workload-identity.html
+
 ```mermaid
 flowchart LR
     subgraph AKS["AKS Cluster (OIDC issuer + Workload Identity enabled)"]

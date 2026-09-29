@@ -1,14 +1,17 @@
 import logging
+import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 import cosmos_client
+from logging_config import setup_logging
 from models import Idea, IdeaCreate
 
-logging.basicConfig(level=logging.INFO)
+setup_logging()
 logger = logging.getLogger("ideahub")
+access_logger = logging.getLogger("ideahub.access")
 
 
 @asynccontextmanager
@@ -23,6 +26,41 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """
+    One line per request, success or failure - this replaces uvicorn's
+    default access log (silenced in logging_config.py). Level tracks status
+    code so a clean run stays at INFO and only 4xx/5xx show up louder,
+    which is what actually makes logs scannable in prod.
+    """
+    start = time.perf_counter()
+    response = await call_next(request)
+    duration_ms = round((time.perf_counter() - start) * 1000, 1)
+
+    if response.status_code >= 500:
+        log = access_logger.error
+    elif response.status_code >= 400:
+        log = access_logger.warning
+    else:
+        log = access_logger.info
+
+    log(
+        "%s %s -> %s (%.1fms)",
+        request.method,
+        request.url.path,
+        response.status_code,
+        duration_ms,
+        extra={
+            "method": request.method,
+            "path": request.url.path,
+            "status_code": response.status_code,
+            "duration_ms": duration_ms,
+        },
+    )
+    return response
 
 
 @app.get("/healthz")

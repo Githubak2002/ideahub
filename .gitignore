@@ -30,3 +30,6 @@ docs
 
 # tmp
 /Prompts
+
+#
+/architecture-diagrams/workload-identity-flow
