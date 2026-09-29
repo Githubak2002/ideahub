@@ -21,7 +21,7 @@ about the infra and security plumbing around it.
 
 ## Architecture Diagram
 
-[![AKS to Cosmos DB Workflow](/aks-cosmosdb-workload-identity/architecture-diagram/workload-identity.png)](https://aks-workload-identity.vercel.app/)
+[![AKS to Cosmos DB Workflow](./architecture-diagram/workload-identity.png)](https://aks-workload-identity.vercel.app/)
 
 *Click the image to interact with the live workflow.*
 
