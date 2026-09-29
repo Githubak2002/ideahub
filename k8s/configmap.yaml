@@ -13,3 +13,6 @@ data:
   COSMOS_ENDPOINT: "https://ideahub-dev-cosmos.documents.azure.com:443/"
   COSMOS_DATABASE: "ideahub"
   COSMOS_CONTAINER: "ideas"
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "json"
+

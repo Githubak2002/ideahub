@@ -21,7 +21,7 @@ about the infra and security plumbing around it.
 
 ## Architecture
 
-**NOTE:** Please explore the doc/architecture-diagrams > workload-identity.html
+![alt text](/aks-cosmosdb-workload-identity/architecture-diagram/workload-identity.png)
 
 ```mermaid
 flowchart LR

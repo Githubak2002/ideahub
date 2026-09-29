@@ -24,7 +24,7 @@ COPY --from=builder /root/.local /home/appuser/.local
 # The above line copies the installed Python packages from the builder stage to the runtime image, specifically to the appuser's local directory.
 
 WORKDIR /app
-COPY main.py models.py cosmos_client.py ./
+COPY main.py models.py cosmos_client.py logging_config.py ./
 
 ENV PATH="/home/appuser/.local/bin:${PATH}" \
     PYTHONUNBUFFERED=1 \
