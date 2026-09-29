@@ -19,9 +19,11 @@ about the infra and security plumbing around it.
 | Audit trail | "Someone used the key" | Every token exchange is tied to a specific identity in Azure AD sign-in logs |
 | Scope of access | Whatever the key type allows (often account-wide) | Exactly what you grant via Cosmos DB RBAC (this repo scopes it to create+read on one container) |
 
-## Architecture
+## Architecture Diagram
 
-![alt text](/aks-cosmosdb-workload-identity/architecture-diagram/workload-identity.png)
+[![AKS to Cosmos DB Workflow](/aks-cosmosdb-workload-identity/architecture-diagram/workload-identity.png)](https://aks-workload-identity.vercel.app/)
+
+*Click the image to interact with the live workflow.*
 
 ```mermaid
 flowchart LR
