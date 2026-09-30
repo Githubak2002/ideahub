@@ -9,6 +9,17 @@ The app itself is intentionally trivial (save an `idea` + optional
 `description`, list them back). The project is not about the app — it's
 about the infra and security plumbing around it.
 
+## Workload Identity Federation and Federated Identity credential
+
+#### Workload Identity Federation:
+> The overall mechanism - "How are we going to establish trust?"
+> I trust an external workload's identity instead of requiring it to store a client secret.
+
+#### Federated Identity Credentials: 
+> The actual configration that tells Entra whom to trust - "Exactly WHO do I trust?"
+> For this identity, I trust tokens coming from this issuer, for this particular subject
+
+
 ## Why this instead of a connection string
 
 | | Connection string / key | Workload Identity + UAMI |
@@ -19,39 +30,19 @@ about the infra and security plumbing around it.
 | Audit trail | "Someone used the key" | Every token exchange is tied to a specific identity in Azure AD sign-in logs |
 | Scope of access | Whatever the key type allows (often account-wide) | Exactly what you grant via Cosmos DB RBAC (this repo scopes it to create+read on one container) |
 
-## Architecture Diagram
+## Workload identity Architecture Diagram
 
-[![AKS to Cosmos DB Workflow](/aks-cosmosdb-workload-identity/architecture-diagram/workload-identity.png)](https://aks-workload-identity.vercel.app/)
+[![AKS to Cosmos DB Workflow](./architecture-diagrams/workload-identity.png)](https://ideahub-aks-workload-identity.vercel.app/)
 
 *Click the image to interact with the live workflow.*
 
-```mermaid
-flowchart LR
-    subgraph AKS["AKS Cluster (OIDC issuer + Workload Identity enabled)"]
-        SA["ServiceAccount: ideahub-sa\n(annotated with UAMI client-id)"]
-        Pod["Pod: ideahub-api\n(labeled azure.workload.identity/use=true)"]
-        Webhook["azure-wi-webhook\n(injects token volume + env vars)"]
-        Pod -- uses --> SA
-        Webhook -. mutates .-> Pod
-    end
 
-    subgraph AAD["Azure AD"]
-        FIC["Federated Identity Credential\nsubject: system:serviceaccount:ideahub:ideahub-sa"]
-        UAMI["User-Assigned Managed Identity"]
-        FIC --> UAMI
-    end
+## Workload identity Architecture Diagram
 
-    subgraph Data["Cosmos DB"]
-        Account["Account\nlocal_authentication_disabled = true"]
-        RBAC["Custom data-plane role\n(create + read only, one container)"]
-        RBAC --> Account
-    end
+[![Azure Architecture](./architecture-diagrams/azure-architecture.png)](https://ideahub-azure-architecture.vercel.app/)
 
-    Pod -- "1. presents projected K8s OIDC token" --> AAD
-    AAD -- "2. validates against FIC, issues AAD access token" --> Pod
-    Pod -- "3. calls Cosmos DB with AAD token (DefaultAzureCredential)" --> Data
-    UAMI -. "granted" .-> RBAC
-```
+*Click the image to interact with the live workflow.*
+
 
 **The trust chain, end to end:**
 
