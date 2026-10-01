@@ -32,14 +32,14 @@ about the infra and security plumbing around it.
 
 ## Workload identity Architecture Diagram
 
-[![AKS to Cosmos DB Workflow](./architecture-diagrams/workload-identity.png)](https://ideahub-aks-workload-identity.vercel.app/)
+[![AKS to Cosmos DB Workflow](./architecture-diagrams/workload-identity.png)](https://anurag-ideahub-aks-wif.vercel.app/)
 
 *Click the image to interact with the live workflow.*
 
 
 ## Workload identity Architecture Diagram
 
-[![Azure Architecture](./architecture-diagrams/azure-architecture.png)](https://ideahub-azure-architecture.vercel.app/)
+[![Azure Architecture](./architecture-diagrams/azure-architecture.png)](https://anurag-ideahub-architecture-diagram.vercel.app/)
 
 *Click the image to interact with the live workflow.*
 
